@@ -1,0 +1,90 @@
+== Writing modulefiles
+
+=== modulefiles for the Pmodules Environment
+
+The Pmodules environment modules are an extension to the well known Tcl Environment Modules.  modulefiles written for the Tcl Environment Modules are fully supported by Pmodules. All Tcl extensions for the Tcl Environment Modules are supported by Pmodules. Pmodules introduces a few additional commands and features described in the next section.
+
+The shebang ("magic cookie") for Pmodules is `#%Pmodules`.
+
+=== Pmodules extensions
+
+==== Extensions for hierarchical groups
+
+===== `module-addgroup`
+
+.*Synopsis*
+[source,sh]
+----
+module-addgroup GROUP
+----
+
+.*Description*
+Add a the hierarchical group GROUP to `MODULEPATH`.
+
+.*Example*
+[source,sh]
+----
+module-addgroup Compiler
+----
+
+
+==== Standardize help message
+
+The Pmodules Environment Modules provide a standardized `ModulesHelp` procedure.  With the following functions, the content of the help message will be setup.
+
+===== `module-url`
+.*Synopsis*
+[source,sh]
+----
+module-license LICENSE
+----
+
+.*Description*
+Indicate the license of the software. `LICENSE` can be a string like `GNU GPLv2`, a path to the license file(s) installed in the module or an URL.
+
+.*Example*
+[source,sh]
+----
+module-license ""See \$GNUPLOT_DIR/share/doc/gnuplot/Copyright""
+----
+
+===== `module-maintainer`
+.*Synopsis*
+[source,sh]
+----
+module-maintainer MAINTAINER
+----
+
+.*Description*
+Indicate the maintainer of the module.
+
+.*Example*
+[source,sh]
+----
+module-maintainer "Karlheinz Mustermann <kmusermann@example.com"
+----
+
+===== `module-help`
+.*Synopsis*
+[source,sh]
+----
+module-help HELP_TEXT
+----
+
+.*Description*
+Setup a more elaborated help text for the `ModulesHelp` procedure.
+
+.*Example*
+[source,sh]
+----
+module-help "
+Gnuplot is a portable command-line driven graphing utility for Linux,
+OS/2, MS Windows, OSX, VMS, and many other platforms. The source code
+is copyrighted but freely distributed (i.e., you don't have to pay for
+it). It was originally created to allow scientists and students to
+visualize mathematical functions and data interactively, but has grown
+to support many non-interactive uses such as web scripting. It is also
+used as a plotting engine by third-party applications like Octave.
+Gnuplot has been supported and under active development since 1986. 
+"
+----

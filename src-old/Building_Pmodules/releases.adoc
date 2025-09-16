@@ -1,0 +1,12 @@
+== Releases
+
+The life-time of a module has three phases:
+
+.*unstable*
+A module is unstable during development and testing. As long as a module is unstable, it can be changed.
+
+.*stable*
+After testing a module is marked as stable. Changes to the module are not allowed any more.
+
+.*deprecated*
+A module marked as deprecated should not be used any more. Deprecated modules can be removed after a certain time in this phase.

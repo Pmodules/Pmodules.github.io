@@ -1,0 +1,17 @@
+[id="pb_supported_compilers", reftext="`pbuild::supported_compilers`"]
+= Supported compilers: `pbuild::set_supported_compilers` (Pmodules 1.0)
+== Synopsis
+[source,sh]
+----
+pbuild::supported_compilers STRING...
+----
+
+== Description
+
+Set list of compiler which can be used to compile the module.
+
+== Example
+[source,sh]
+----
+pbuild::supported_compilers gcc clang
+----

@@ -1,0 +1,198 @@
+== Build-blocks at a glance
+
+A build block-block consists of all files required to build and
+install a module from source and defines the *name* of the module. All
+files of a build-block resides in a directory with the name of the
+build-block.
+
+In its basic form a build-block consist of the following files:
+
+[cols="<,<",options="header"]
+|===
+| `$P`            
+| top-level directory, also defines the name of the module.
+
+| `$P/build`
+| build-script with instructions to build the module. This script will be executed by the `modbuild` interpreter.
+
+| `$P/modulefile`
+| the module-file
+
+| `$P/files/variants`
+| file specifying the *variants* for the module and given version. A *variant* specifies the build- and run-time dependencies and the release for a particular module version.
+|===
+
+> The *name of the module* is defined by the directory of the build-block `$P`.
+
+=== Example of a simple build-block
+
+In this section we give a short and simple example of a
+build-block. The following files are required to build the `gnuplot`
+module. The build-block consist of the three files:
+
+[cols="<,<",options="header"]
+|===
+| `gnuplot/build`          | build-script 
+| `gnuplot/modulefile`     | module-file
+| `gnuplot/files/variants` | variants-file 
+|===
+
+==== The `gnuplot` build-script
+
+[source,shell]
+----
+#!/usr/bin/env modbuild
+
+pbuild::add_to_group 'Tools'
+
+pbuild::set_download_url \
+        "https://sourceforge.net/projects/gnuplot/files/$P/$V/$P-$V.tar.gz"
+pbuild::set_sha256sum 'gnuplot-5.2.4.tar.gz:1515f000bd373aaa53b16183f274189d4f5e0ae47d22f434857933d16a4770cb'
+pbuild::install_docfiles 'Copyright' 'ChangeLog' 'NEWS' 'README'
+----
+
+==== The `gnuplot` modulefile
+
+```
+#%PModule
+
+module-whatis		"portable command-line driven graphing utility"
+module-url		"http://www.gnuplot.info/"
+module-license		"See \$GNUPLOT_DIR/share/doc/gnuplot/Copyright"
+module-maintainer	"Achim Gsell <achim.gsell@psi.ch>"
+
+module-help		"
+Gnuplot is a portable command-line driven graphing utility for Linux,
+OS/2, MS Windows, OSX, VMS, and many other platforms. The source code
+is copyrighted but freely distributed (i.e., you don't have to pay for
+it). It was originally created to allow scientists and students to
+visualize mathematical functions and data interactively, but has grown
+to support many non-interactive uses such as web scripting. It is also
+used as a plotting engine by third-party applications like Octave.
+Gnuplot has been supported and under active development since 1986.
+"
+```
+
+==== The `gnuplot` variants file
+
+```
+gnuplot/4.6.3	stable
+gnuplot/5.0.0	stable
+gnuplot/5.2.0	stable
+gnuplot/5.2.4	stable
+```
+
+=== Example of a more complex build-block
+
+==== HDF5 build-script
+
+[source,shell]
+----
+#!/usr/bin/env modbuild
+
+pbuild::set_download_url "https://support.hdfgroup.org/ftp/HDF5/releases/$P-${V_MAJOR}.${V_MINOR}/$P-$V/src/hdf5-$V.tar.bz2"
+pbuild::add_to_group 'MPI'
+
+pbuild::add_docfiles ACKNOWLEDGMENTS
+pbuild::add_docfiles COPYING
+pbuild::add_docfiles MANIFEST
+pbuild::add_docfiles README.txt
+
+pbuild::pre_configure() {
+        pbuild::add_configure_args "CC=${MPICC}"
+        pbuild::add_configure_args "CXX=${MPICXX}"
+
+        pbuild::add_configure_args "--enable-shared"
+        pbuild::add_configure_args "--enable-parallel"
+        pbuild::add_configure_args "--enable-cxx"
+        pbuild::add_configure_args "--enable-unsupported"
+        #pbuild::add_configure_args "--enable-threadsafe"
+        pbuild::add_configure_args "--with-pic"
+
+        local enable_fortran='yes'
+
+        case "${COMPILER}" in
+                clang-macos )
+                        enable_fortran='no'
+                        # we do not have Fortran in Xcode
+                        ;;
+                pgi )
+                        # PGI uses GCC's include files, some object files and
+                        # the STL implementation!
+                        # The PGI C pre-processor is broken and doesn't work
+                        # for HDF5. We use the pre-processor of the underlying
+                        # GCC...
+                        # This is a bit hackish!
+                        #
+                        # The following eval sets GCCDIR! Which is something
+                        # like:
+                        # /opt/psi/Programming/gcc/7.3.0/bin/../lib/gcc/x86_64-pc-linux-gnu/7.3.0
+                        #
+                        eval $(pgcc -show 2>/dev/null | \
+                                awk '/^GCCDIR[[:space:]]*=/{gsub(/[[:space:]]/,""); print $0}')
+                        pbuild::add_configure_args "CPP=${GCCDIR%%/..*}/cpp"
+                        pbuild::add_configure_args "CFLAGS=-fPIC"
+                        pbuild::add_configure_args "CXXFLAGS=-fPIC"
+                        pbuild::add_configure_args "FCFLAGS=-fPIC"
+                        ;;
+        esac
+
+        if [[ "${enable_fortran}" == 'yes' ]]; then
+                pbuild::add_configure_args "F77=${MPIF77}"
+                pbuild::add_configure_args "F90=${MPIF90}"
+                pbuild::add_configure_args "FC=${MPIFC}"
+                pbuild::add_configure_args "FORTRAN=${MPIFORTRAN}"
+                pbuild::add_configure_args "--enable-fortran"
+        fi
+
+}
+----
+
+==== The HDF5 modulefile
+
+[source,shell]
+----
+#%Module1.0
+
+module-whatis		"Hierachical Data Format 5"
+module-url		"http://www.hdfgroup.org/HDF5"
+module-license		"HDF license (BSD-like)"
+module-maintainer	"Achim Gsell <achim.gsell@psi.ch>"
+module-help		"
+HDF5 is a data model, library, and file format for storing and managing
+data. It supports an unlimited variety of datatypes, and is designed for
+flexible and efficient I/O and for high volume and complex data. HDF5 is
+portable and is extensible, allowing applications to evolve in their use
+of HDF5. The HDF5 Technology suite includes tools and applications for
+managing, manipulating, viewing, and analyzing data in the HDF5 format. 
+"
+
+conflict	hdf5_serial
+module-addgroup	HDF5
+----
+
+==== The HDF5 1.10 variants file
+
+----
+hdf5/1.10.0	stable		gcc/4.8.5 openmpi/1.10.2
+hdf5/1.10.0	stable		gcc/4.9.3 openmpi/1.10.2
+hdf5/1.10.0	stable		gcc/5.3.0 openmpi/1.10.2
+hdf5/1.10.0	stable		gcc/6.1.0 openmpi/1.10.2
+
+hdf5/1.10.1	unstable	gcc/7.3.0 openmpi/1.10.2
+hdf5/1.10.1	unstable	gcc/7.3.0 openmpi/1.10.7
+hdf5/1.10.1	unstable	gcc/7.3.0 openmpi/2.1.2
+hdf5/1.10.1	unstable	gcc/7.3.0 openmpi/3.0.0
+hdf5/1.10.1	unstable	gcc/7.3.0 openmpi/3.0.1
+
+hdf5/1.10.1	unstable	intel/17.4 openmpi/1.10.7
+hdf5/1.10.1	unstable	intel/17.4 openmpi/2.1.2
+hdf5/1.10.1	unstable	intel/17.4 openmpi/3.0.0
+hdf5/1.10.1	unstable	intel/17.4 intel-mpi/17.4
+
+hdf5/1.10.1	unstable	pgi/18.5 pgi-mpi/18.5
+
+hdf5/1.10.2 	stable    	gcc/7.3.0 openmpi/3.0.1
+hdf5/1.10.3 	stable    	gcc/7.3.0 openmpi/3.1.2
+hdf5/1.10.3	unstable	intel/17.4 intel-mpi/17.4
+----

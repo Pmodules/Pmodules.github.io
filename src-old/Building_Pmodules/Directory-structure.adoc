@@ -1,0 +1,120 @@
+=== Introduction
+
+The Pmodules environment organize modules in groups. Groups are either _simple_ or _hierarchical_. Modules in a simple group has no or only simple dependencies. Modules in a hierarchical group always have at least one hierarchical (run-time)dependency. See the following examples to get the idea of simple and hierarchical groups and dependencies.
+
+.Hierarchical groups and dependencies
+====
+The module `openmpi/3.1.2` is in the group `Compiler`. Before this module can be loaded, a compiler must loaded, for example `gcc/7.3.0`. The group `Compiler` is a _hierarchical group_ because multiple variants of the same modules in this group exist for different compilers. In this example `openmpi/3.1.2` have been compiled with `gcc/6.4.0`, `gcc/7.3.0`... As a consequence you have to select and load a compiler before you can load the modules in this group. 
+====
+
+.Simple groups
+====
+The module `gcc/7.3.0` is in the group `Programming`. This group is _simple_. There is no need for several variants of this modules.
+====
+
+.Simple dependencies
+====
+The module `git/2.16.2` is in the _simple_ group `Tools`. Git requires Tcl/Tk for the `gui`-subcommand. Simple dependencies must be loaded in the modulefile or better specified in the build-block. If specified in the build-block, they are loaded are loaded automatically.
+====
+
+In this chapter we use several variables used in build-blocks and/or modulefiles. Please read link:../Development/Notations[this chapter] for details.
+
+=== File hierarchy of a simple group
+
+ 
+`$PMODULES_ROOT/$GROUP`:: 
+container for `$GROUP`.
+
+`$PMODULES_ROOT/$GROUP/modulefiles/$P/$V`:: 
+modulefile for `$P/$V`.
+
+`$PMODULES_ROOT/$GROUP/modulefiles/$P/.release-$V`:: 
+release of module `$P/$V`.
+
+`$PMODULES_ROOT/$GROUP/$P/$V`:: 
+prefix for module `$P/$V`.
+
+=== File hierarchy of the hierarchical group `Compiler`
+
+`$PMODULES_ROOT/Compiler`:: 
+container for group `Compiler`
+
+`.../modulefiles/$COMPILER/$COMPILER_VERSION/$P/$V`:: 
+modulefile for `$P/$V`.
+
+`.../modulefiles/$COMPILER/$COMPILER_VERSION/$P/.release-$V`:: 
+release of module `$P/$V`.
+
+`.../$P/$V/$COMPILER/$COMPILER_VERSION`:: 
+prefix for module `$P/$V`.
+
+=== File hierarchy of the hierarchical group `MPI`
+
+`$PMODULES_ROOT/MPI`:: 
+container for group `MPI`.
+
+`.../modulefiles/$COMPILER/$COMPILER_VERSION/$MPI/$MPI_VERSION/$P/$V`:: 
+modulefile for `$P/$V`.
+
+`.../modulefiles/$COMPILER/$COMPILER_VERSION/$MPI/$MPI_VERSION/$P/.release-$V`:: 
+release of module `$P/$V`.
+
+`.../$P/$V/$MPI/$MPI_VERSION/$COMPILER/$COMPILER_VERSION`:: 
+prefix for module `$P/$V`.
+
+=== File hierarchy of the hierarchical group `HDF5`
+
+`$PMODULES_ROOT/HDF5`:: 
+container for group `MPI`.
+
+`.../modulefiles/$COMPILER/$COMPILER_VERSION/$MPI/$MPI_VERSION/hdf5/$HDF5_VERSION/$P/$V`:: 
+modulefile for `$P/$V`.
+
+`.../modulefiles/$COMPILER/$COMPILER_VERSION/$MPI/$MPI_VERSION/hdf5/$HDF5_VERSION/$P/.release-$V`:: 
+release of module `$P/$V`.
+
+`.../$P/$V/hdf5/$HDF5_VERSION/$MPI/$MPI_VERSION/$COMPILER/$COMPILER_VERSION`:: 
+prefix for module `$P/$V`.
+
+=== File hierarchy inside a module
+
+The file hierarchy defined in the Linux File Hierarchy Standard should be used. In the following we document only Pmodules special features:
+
+`$PREFIX`:: 
+Prefix of the module.
+
+`$PREFIX/.dependencies`:: 
+Run-time dependencies, loaded automatically
+
+`$PREFIX/{bin,sbin}`:: 
+If exists, added to `PATH` while loading.
+
+`$PREFIX/include`:: 
+If exists, added to `C_INCLUDE_PATH` and `CPLUS_INCLUDE_PATH` while loading.
+
+`$PREFIX/{lib,lib64}`:: 
+If exists, added to `LIBRARY_PATH` and `LD_LIBRARY_PATH` while loading
+
+`$PREFIX/lib/cmake`:: 
+If exist, added to `CMAKE_MODULE_PATH` while loading
+
+`$PREFIX/lib/pkgconfig`:: 
+If exist, added to `PKG_CONFIG_PATH` while loading
+
+`$PREFIX/share/man`:: 
+If exists, added to `MANPATH` while loading.
+
+`$PREFIX/share/Pmoudles/$GROUP/$P`:: 
+Build-block used to build this module
+
+`$PREFIX/share/Pmoudles/$GROUP/$P/build`:: 
+Build-script
+
+`$PPREFIX/share/Pmoudles/$GROUP/$P/dependencies`:: 
+All dependencies loaded while building. This includes build- and run-time dependencies.
+
+`$PREFIX/share/Pmoudles/$GROUP/$P/files/variants`:: 
+Used variants-file.
+
+`$PREFIX/share/Pmoudles/$GROUP/$P/modulefile`:: 
+Used Modulefile.

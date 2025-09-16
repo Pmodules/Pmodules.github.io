@@ -1,0 +1,62 @@
+== *MOTIVATION*
+
+Environment module systems provide a solution for the dynamic
+modification of a user's environment by loading special files named
+'modulefiles'.
+
+Each modulefile contains the information needed to configure the shell
+for an application or library. The environment can be modified on a
+per-module basis using the +module+ command which interprets
+modulefiles. Typically modulefiles instruct the +module+ command to
+alter or set shell environment variables such as +PATH+, +MANPATH+
+etc. modulefiles may be shared by many users on a system and users may
+have their own collection to supplement or replace the shared
+modulefiles.
+
+Environment module systems are widely used on HPC systems to provide
+multiple compilers and multiple versions of the same library or API
+implementations to the users. The
+http://modules.sourceforge.net/[Environment Modules] system is the
+most widely used implementation. Another - more recent -
+implementation is
+https://www.tacc.utexas.edu/research-development/tacc-projects/lmod[Lmod]. Lmod
+addresses some weaknesses of the Environment Modules, but solves only
+some of them.
+
+One issue with the Environment Modules is the flat naming scheme. The
+Lmod system and Pmodules solves the problem by organizing the modules
+hierarchically. What is the problem with a flat naming scheme? Provide
+different versions of the same library, like openmpi 1.6.5/1.8.4,
+compiled with different (versions) of compilers, like gcc
+4.7.4/4.8.4/4.9.2 and Intel 14.0.2/15.2, the number of modules is
+growing quite fast. Providing dozens of libraries will end up in
+hundreds of modules - not very clear to the users.
+
+Neither Environment Modules nor Lmod have build-in support for phasing
+out modules or marking modules as unstable. Pmodules solves this
+problem by introducing 'releases' like stable, unstable and
+deprecated. A user will be warned while loading a non-stable module.
+
+With Environment Modules and Lmod everything must be coded in the
+modulefile - even things which are obvious. If a +bin+ directory
+exists, why not adding this directory to the +PATH+ variable
+automatically? The same can be done for +MANPATH+, +LD_LIBRARY_PATH+
+and other environment variables.
+
+Usually modules are installed on a network file-systems. In some cases
+it is convenient or even required to install modules locally. Pmodules
+provides a tool to install all or a sub-set of the modules from any
+location to another location.
+
+Pmodules has its own (simple) build environment. For a new module you
+have to write a build script and a modulefile. Updating an existing
+modules is very simple. In most cases it's downloading the new version
+and calling the build script. Anyway, nobody forces you to use this
+build environment, but in most cases it is very handy.
+
+[NOTE]
+=====================================================================
+Some parts of this documentation has been copied from the documentation
+of http://modules.sourceforge.net/[Environment Modules] and
+https://www.tacc.utexas.edu/research-development/tacc-projects/lmod[Lmod].
+=====================================================================

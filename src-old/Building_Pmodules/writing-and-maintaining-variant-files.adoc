@@ -1,0 +1,74 @@
+== Writing and maintaining variant files 
+
+The purpose of the `variants` files is to define the release of a module, the build- and run-time dependencies for each module version.
+
+=== Locations
+
+`variants` files are searched in the several directories and various names, the first file found will be used:
+
+1. `$P/$V_MAJOR.$V_MINOR.$V_PATCHLVL/variants.$SYSTEM`
+2. `$P/$V_MAJOR.$V_MINOR.$V_PATCHLVL/variants`
+3. `$P/$V_MAJOR.$V_MINOR/variants.$SYSTEM`
+4. `$P/$V_MAJOR.$V_MINOR/variants`
+5. `$P/$V_MAJOR/variants.$SYSTEM`
+6. `$P/$V_MAJOR/variants`
+7. `$P/files/variants.$SYSTEM`
+8. `$P/files/variants`
+
+The reason for supporting several location is to keep the files short
+and easy to read. Which scheme should be used depends on the software. For
+software on the top-level of the hierarchy (like Gnuplot or GCC),
+`$P/files/variants` or `$P/$V_MAJOR/variants` is a good choice. For
+software with lot of combinations like HDF5,
+`$P/$V_MAJOR.$V_MINOR/variants` or
+`$P/$V_MAJOR.$V_MINOR.$V_PATCHLVL/variants` is recommended.
+
+System specific variants files are supported for two reasons. On different
+operating systems like Linux and macOS the required dependencies might differ. 
+We have the same problem, if we want to build modules on a HPC system like Euler (ETHZ) or Edison (NERSC). The value of system defaults to the string returned by `uname -s` and can be overwritten with the argument `--system`.
+
+=== Format
+
+The `variants` files can contain any number of lines. A line is either
+* a variant specification consisting of the module name and version, the release and all dependencies
+* an empty line (white space is allowed)
+* or a comment line. Comment lines can start with any string *not* matching the module name.
+
+==== Variant specifications
+
+The form of a variant specification is
+
+----
+$P/$V[-$V_RELEASE][_USEFLAG] unstable|stable|deprecated [group dependency...] [run-time dependency...] [build dependency...]
+----
+
+.*Example*
+----
+parmetis/4.0.3  stable gcc/7.3.0 openmpi/3.0.0  b:cmake/3.6.3
+----
+
+.*Module name and version*
+The line *must* begin with the full module name. This includes name, version as well as the optional release and use-flag. White-space at the beginning of the line is *not* allowed.
+
+.*Release*
+The release is either `unstable`, `stable` or `deprecated`. The meaning of the releases is explained in the next section.
+
+.*Dependencies*
+Dependencies are loaded in the specified order. It is recommended to specify the dependencies of a the (hierarchical) group first, then additional modules required at run-time and the modules required to build it at the end.
+
+
+.*Hierarchical dependencies*
+If the module is in a hierarchical group like `MPI`, you must specify the modules required for this group. For modules in the group
+
+* `Compiler` a compiler must be specified
+* `MPI` a compiler and a MPI implementation must be specified
+* `HDF5` a compiler, a MPI implementation and a HDF5 module must be specified
+* ...
+
+> *Note:* The order of these dependencies is relevant since the modules are loaded in the given order. Example: before a MPI module is available a compiler must be loaded. So a compiler module must be listed first!
+
+.*Run-time dependencies*
+are automatically loaded before the module is loaded with the `module load` command. Run-time dependencies should be specified even if they are not required to _build_ the module.
+
+.*Build dependencies*
+are loaded before the actual build starts. Build dependencies are only required tp build the module. They are _not_ automatically loaded together with the module. Build dependencies must be prefixed with `b:`. 

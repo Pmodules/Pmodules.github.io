@@ -1,0 +1,91 @@
+== Site specific setup
+
+In this section we document site specific aspects of the Pmodules Environment installation.
+
+=== Pmodules @PSI
+
+==== Installation overview
+
+The Pmodules Environment must be accessed via the path `/opt/psi`. This
+is either a _symbolic link_ to or a _bind mount_ of a dedicated
+directory on AFS.
+
+The minimum required operating system is RHEL6 or clone. Other Linux
+distributions with glibc 2.12 or newer should work too. It might be
+necessary to install some libraries used by certain modules. In general
+the modules are build with as few dependencies to system libraries as
+possible.
+
+At PSI several Pmodules Environments are available covering
+miscellaneous use cases like desktop, dedicated HPC systems and
+operating systems like Linux and macOS. The main reason to provide
+different environments for the same operating systems is, to be able to
+support different Pmodules configurations and different sets of groups
+inside the environments. The following environments are available:
+
+`psi.x86_64_slp6`:: Pmodules environment for desktop systems.
+
+`psi.merlin`:: Pmodules environment for the HPC system Merlin. For the
+time being this is identical with the environment for desktop systems.
+
+`psi.ra`:: Pmodules environment for the HPC system Merlin. This
+environment provides all modules of the desktop environment plus the
+groups `EM` and `MX`.
+
+`psi.pmod6`:: Pmodules environment for the development system
+`pmod6.psi.ch`
+
+`psi.i386_el6`:: Pmodules environment for 32bit CPU. This is for legacy
+applications and modules only!
+
+`psi.amd64_darwin_130`:: Pmodules environment for macOS >= 10.12.
+
+==== Internal organisation with AFS volumes
+
+At a first glance the internal organisation with several AFS volumes for
+modules, groups and environments looks confusing, complicate and
+overdone. But it is flexible and has some advantages on AFS like
+reasonable volume sizes respective number of files per volume.
+
+===== Module-volumes
+
+It is strongly recommended to create and use a dedicated AFS volume per
+module. In the normal case one volume is sufficient for all versions of
+a module. In some special cases like Intel Compiler, Matlab etc. it is
+strongly recommended to create and use one AFS volumes per version.
+
+===== Group-volumes
+
+Groups are containers for modules. Most groups are shared with multiple
+environments. Groups are stored in dedicated AFS volumes, one volume per
+group. In group-volumes module-volumes are mounted. It is strongly
+recommended *not* to install modules in group-volumes but to create
+volumes per module. For a group providing modules for a dedicated system
+it can be acceptable to store special volumes directly into the
+group-volume. 
+
+===== Environment-volumes
+
+All environments are stored in a dedicated AFS volume. This volumes are
+mounted in the directory `/afs/psi.ch/sys`. The name of the mount point
+is the same as the environment names listed above. The volumes used to
+provide an environment should be used to mount group volumes.
+
+.GCC modules for Linux
+====
+All GCC versions are installed in the directory
+`/afs/psi.ch/sys/psi.x86_64_slp6/Programming/gcc`. This is a mount point
+for the module-volume `m.e6.P.gcc`.
+
+`/afs/psi.ch/sys/psi.x86_64_slp6/Programming` is a mount-point for the
+group-volume `m.e6.Programming`
+
+`/afs/psi.ch/sys/psi.x86_64_slp6` is a mount-point for the
+environment-volume `sys.psi.x86_64_sl6`.
+====
+
+==== Adding a new group, module or version
+
+A consequence of the organisation into AFS volumes is, that a new volume
+must be created for each new module, group and environment. For the time
+being this must be done by an AFS administrator.

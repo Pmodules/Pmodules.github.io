@@ -1,0 +1,28 @@
+== Files and directories in a build-block
+
+Mandatory files in a build-block are
+
+1. the build-script,
+2. the modulefile
+3. and a variants file
+
+In some cases additional files like patches are required. These additional files might be required only for certain versions or operating systems.
+
+[cols="<,<",options="header"]
+|===
+| `$P`            
+| top-level directory, defines the name of the module.
+
+| `$P/build`
+| build-script with instructions to build the module. This script will be executed by the `modbuild` interpreter.
+
+| `$P/modulefile`
+| the modulefile
+
+| `$P/$V_MAJOR[.$V_MINOR[.$V_PATCH_LEVEL]]/`
+| Directories for patches or other required files which are specific to certain versions. These directories can also be used for variant-files. 
+
+
+| `$P/files/variants[.$SYSTEM]`
+| file specifying the *variants* for the module and given version. A *variant* specifies the build- and run-time dependencies and the release for a particular module version. The value of `$SYSTEM` defaults to the string returned by `uname -s` or can be set on the command line with the `--system` option.
+|===

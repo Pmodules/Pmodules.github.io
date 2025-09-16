@@ -1,0 +1,37 @@
+image: asciidoctor/docker-asciidoctor
+
+pages:
+  artifacts:
+    paths:
+      - public
+  script:
+    - apk update
+    - apk add --update nodejs
+    - which node
+    - cd /tmp
+    -  >
+      curl -L -o asciidoctor-chunker_v1.0.4.zip \
+          https://github.com/wshito/asciidoctor-chunker/releases/download/v1.0.4/asciidoctor-chunker_v1.0.4.zip
+    - >
+      unzip -p \
+        asciidoctor-chunker_v1.0.4.zip \
+        '*/asciidoctor-chunker.js' > /usr/bin/asciidoctor-chunker
+    - chmod 0755 /usr/bin/asciidoctor-chunker
+    - cd "$CI_PROJECT_DIR"
+    - >
+      asciidoctor -a data-uri \
+        -a reproducible \
+        -a icons=font \
+        -a source-highlighter=Pygments \
+        -a experimental \
+        -a stylesheet=$CI_PROJECT_DIR/src/stylesheets/readthedocs-new.css \
+        -D /tmp \
+        -R src '**/*.adoc'
+    - >
+      asciidoctor-chunker \
+        --depth 1 \
+        --outdir public \
+        --titlePage '' \
+        /tmp/index.html
+    - cp -v src/asciidoctor-chunker.css public      
+    

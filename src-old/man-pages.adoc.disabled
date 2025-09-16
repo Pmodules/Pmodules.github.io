@@ -1,0 +1,14 @@
+== *REFERENCES*
+
+[NOTE]
+=====================================================================
+Some parts of this documentation has been copied from the documentation
+of http://modules.sourceforge.net/[Environment Modules] and
+https://www.tacc.utexas.edu/research-development/tacc-projects/lmod[Lmod].
+=====================================================================
+
+include::module.adoc[]
+
+include::man4/modulefile.adoc[]
+
+include::pbuild.adoc[]

@@ -1,0 +1,39 @@
+== Module names
+
+A full module name is composed of 
+
+* a name,
+* a version number,
+* an optional release number and
+* an optional use-flag.
+
+ Example:
+the module name for the GNU multi-precision C library (MPC)
+version 1.0.3 is `mpc/1.0.3`.
+
+The optional *release number* reflects changes in the module build while using the same software and version. There are three typical use cases for adding respective incrementing the release number of a module: 
+
+1. Changes in the way the software is compiled - for example by changing the arguments passed to autotools/CMake,
+2. In many cases software depends on other software. It might be necessary to rebuild/update a module to incorporating these changes.  
+3. The modulefile and/or the build-script has been changed.
+
+Example: The GNU MPC library depends on the GNU Multiple Precision
+Arithmetic Library (GMP) and the GNU C library for multiple-precision
+floating-point computations with correct rounding (MPFR). While MPC
+version 1.0.3 was still the most current release, several version of
+GMP and MPFR had been released. For an up to date MPC module, we had
+to rebuild it several times:
+
+[cols="<,<",options="header"]
+|===
+| MPC module    | build with 
+| `mpc/1.0.3`   | `gmp/6.1.0` `mpfr/3.1.4`
+| `mpc/1.0.3-1` | `gmp/6.1.1` `mpfr/3.1.4`
+| `mpc/1.0.3-2` | `gmp/6.1.2` `mpfr/3.1.5`
+|===
+
+The optional use-flag must be appended and separated with an underscore. Modules _without_ an use-flag must be compiled for the x86_64 architecture. This feature is still experimental. For the time being any string can be used. Use-flags can be selected with the `module use flag=FLAG` command. In case an use-flag is set a module compiled with this use-flag will be preferred over the same module compiled without a use-flag.  Typical use cases for these flags are 
+
+* compiling the same module for different CPU's.
+* compiling the same module with different features enabled, like with and without OpenMPI.
+* support for special hardware for dedicated systems like Infiniband.

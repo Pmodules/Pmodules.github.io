@@ -1,0 +1,24 @@
+== Build script functions
+
+=== Setup functions
+
+* link:../man3/add_to_group[`pbuild::add_to_group`: Define group of a module]
+* link:../man3/set_download_url[`pbuild::set_download_url`: Set download URL]
+* link:../man3/add_patch[`pbuild::add_patch`: Adding patches to be applied]
+* link:../man3/add_configure_args[`pbuild::add_configure_args`: Set configuration options]
+* link:../man3/install_docfile[`pbuild::install_docfiles`: Define documentation to be installed]
+
+=== Building and installing
+
+* link:../man3/prep[`pbuild::prep`: Download and unpack software]
+* link:../man3/configure[`pbuild::configure`: Configure software]
+* link:../man3/compile[`pbuild::compile`: Compile software]
+* link:../man3/install[`pbuild::install`: Install software]
+
+=== Less common functions
+
+* link:../man3/compile_in_sourcetree[`pbuild::compile_in_sourcetree`]
+* link:../man3/supported_os[`pbuild::supported_systems`]
+* link:../man3/use_flag[`pbuild::use_flag`]
+* link:../man3/use_autotools[`pbuild::use_autotools`]
+* link:../man3/use_cmake[`pbuild::use_cmake`]
