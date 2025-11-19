@@ -154,14 +154,11 @@ install:: Install everything in the target directory. In case of a binary packag
 
 [id="writing-build-configuration-files", reftext="Writing build configuration files"]
 == Writing build configuration files
-include::Building_Pmodules/build-config-files/variants.adoc[leveloffset=+2]
 include::Building_Pmodules/build-config-files/config_yaml.adoc[leveloffset=+2]
 
 ---
 
 [id="writing-modulefiles", reftext="Writing `modulefiles`"]
-== Writing `modulefiles`
-include::Building_Pmodules/modulefile.adoc[leveloffset=+2]
 
 ---
 

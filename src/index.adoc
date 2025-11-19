@@ -17,6 +17,8 @@ include::Nutshell.adoc[leveloffset=+1]
 
 include::The_module_command.adoc[leveloffset=+1]
 
+include::modulefiles.adoc[leveloffset=+1]
+
 :sectnumlevels: 4
 include::Building_Pmodules.adoc[leveloffset=+1]
 
