@@ -288,15 +288,6 @@ to get a list of all option with a description. The most common option are
 `-f`:: to force a rebuild
 `--verbose`:: to get a full debug trace.
 
-=== Setup functions
-include::Building_Pmodules/functions/add_patch.adoc[leveloffset=+3]
----
-include::Building_Pmodules/functions/add_configure_args.adoc[leveloffset=+3]
----
-include::Building_Pmodules/functions/add_to_group.adoc[leveloffset=+3]
----
-include::Building_Pmodules/functions/set_download_url.adoc[leveloffset=+3]
----
 === Functions to compare versions
 include::Building_Pmodules/functions/cmp_versions.adoc[leveloffset=+3]
 
