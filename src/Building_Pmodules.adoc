@@ -309,26 +309,6 @@ include::Building_Pmodules/functions/compile.adoc[leveloffset=+3]
 ---
 include::Building_Pmodules/functions/install.adoc[leveloffset=+3]
 
-=== Other functions (Pmodules 1.0 only)
-[NOTE]
-====
-These functions are deprecated in Pmodules 1.1 and newer!
-====
-include::Building_Pmodules/functions/compile_in_sourcetree.adoc[leveloffset=+3]
----
-include::Building_Pmodules/functions/install_docfile.adoc[leveloffset=+3]
----
-include::Building_Pmodules/functions/set_sha256sum.adoc[leveloffset=+3]
----
-include::Building_Pmodules/functions/supported_compilers.adoc[leveloffset=+3]
----
-include::Building_Pmodules/functions/supported_os.adoc[leveloffset=+3]
----
-include::Building_Pmodules/functions/use_autotools.adoc[leveloffset=+3]
----
-include::Building_Pmodules/functions/use_cmake.adoc[leveloffset=+3]
----
-
 == Runtime configuration files
 include::Building_Pmodules/runtime-config-files/module_config.adoc[leveloffset=+1]
 
