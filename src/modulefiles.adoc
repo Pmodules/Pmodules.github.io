@@ -1,4 +1,4 @@
-[id="modulefile",reftext="`modulefile`"]
+[id="sec-modulefiles",reftext="`modulefiles`"]
 = `modulefiles`
 
 == NAME

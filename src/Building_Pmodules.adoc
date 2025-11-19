@@ -137,7 +137,7 @@ Perform the following steps for a new Pmodule:
 
 1. Create a directory with the name of the module.
 2. Write the configuration file. See section <<writing-build-configuration-files>>.
-3. Write the modulefile. See section <<writing-modulefiles>>.
+3. Write the modulefile. See section <<sec-modulefiles>>.
 4. Code all required steps to install a software in a script. If it is not possible to script everything, code as much as possible and document additional steps in a README file. See section <<writing-build-scripts>>.
 
 The first - and sometimes also to most challenging - step in building a Pmodule from source is to learn how to download, configure, compile and install a software package and dependencies the package has. The next steps are writing a configuration file, a modulefile and a script to download, configure, compile and install it.  
@@ -155,10 +155,6 @@ install:: Install everything in the target directory. In case of a binary packag
 [id="writing-build-configuration-files", reftext="Writing build configuration files"]
 == Writing build configuration files
 include::Building_Pmodules/build-config-files/config_yaml.adoc[leveloffset=+2]
-
----
-
-[id="writing-modulefiles", reftext="Writing `modulefiles`"]
 
 ---
 
