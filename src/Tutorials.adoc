@@ -2,6 +2,8 @@
 
 == Step-by-step guide to build a 'Hello, world!' module
 
+Note: This is for Pmodules 2.0 or newer!
+
 1. Download a stub for a new build-block
 +
 [source,shell]
@@ -70,5 +72,10 @@ pbuild::install() {      # <2>
 <1> Don't use the default `pbuild::configure()`` function!
     There is nothing to configure. :)
 <2> The Makefile doesn't have an 'install' target. Therefore we have to code it ourself. 
-
+1. Build the module
++
+[source,shell]
+----
+./build 1.0.0
+----
 
