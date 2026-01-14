@@ -1,0 +1,84 @@
+= *CONFIGURATION*
+
+== Locations
+
+On AFS the path of the system wide configuration file is `/opt/psi/config/Pmodules.yaml`.
+
+If Pmodules is installed as RPM, the path of system wide configuration file is `/etc/Pmodules.yaml`.
+
+Users can define additional overlays in `$HOME/.Pmodules/Pmodules.yaml`.
+
+== Minimal system wide configuration
+[source,yaml]
+----
+Overlays:
+  base:                      # <1>
+    install_root: DIR        # <2>
+----
+<1> The 'base' overlay is mandatory.
+<2> Root of the Pmodules installation.
+
+== General configuration options
+
+`DefaultGroups:`|`default_groups: group[,group]...` :: Comma separated list of groups which are available after initializing Pmodules. Defaults to `Tools, Programming`
+
+`DefaultRelstages: relstage[,relstage]...`:: Modules with these release stages will be available after initializing Pmodule. Allowed values are `unstable`, `stable` and `deprecated`. Defaults to `stable`
+
+`TmpDir:`|`tmp_dir: DIR`:: Directory for temp-files. This is mainly used while building a module. Defaults to `/var/tmp/${USER}`.
+
+`DistfilesDir:`|`download_dir: DIR`:: Directory where downloaded files are stored. This used only while building a module. Defaults to
+`${HOME}/.cache/Pmodules/distfiles`.
+
+`Overlays:`:: The system wide overlays must be defined here. At least an overlay with the name `base` must be defined.
++
+[source,yaml]
+----
+Overlays:
+  base:
+    install_root: DIR
+    key: value
+    ...
+  ol_name:
+    install_root: DIR
+    key: value
+    ...
+  ...
+----
++
+See next section for more details. Overlay definitions can also be added to the user Pmodules configuration file. 
+
+== Overlay configuration
+
+=== Mandatory configuration
+
+`install_root: DIR`:: Root directory of the overlay.
+
+=== Optional configuration
+
+`modulefiles_root: DIR`:: Modulefiles can be stored separately from the software packages. This is particularly useful during the development of a new module. The software can be installed in its final location, while the module files are temporarily installed elsewhere - for example in the users home directory. This means that the modules are not available to other users. Once development is complete, only the module files need to be re-installed in their final location. Example:
++
+[source,yaml]
+----
+  devel:
+    install_root: /opt/psi
+    modulefiles_root: ${HOME}/modulefiles_devel
+----
+Defaults to `install_root`.
+
+`type: n|h|r`:: Type of the overlay:
++
+`n`::: Modules are seamless merged (n: normal).
+`h`::: Modules with the same name in other overlays are made unavailable. (h: hidden)
+`r`::: Similar to type `h` but for groups. A overlay containing the group 'Foo' with this type makes all modules in the group `Foo` of other overlays unavailable.
+
+`layout: Pmodules|Spack|flat`:: TBW
+
+`default_relstage: RELEASE_STAGE`:: TBW
+
+conflicte:: TBW
+
+excludes:: TBW
+
+groups:: TBW
+
+path_config:: TBW
