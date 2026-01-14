@@ -213,7 +213,7 @@ hello_world:
 ----
 <1> Set release stage of version 1.0.0 to 'deprecated'.
 <2> The config section for version 2.0.0 has been removed. Therefor the defaults are used.
-+
+
 1. Change release stages
 +
 [source,shell]
