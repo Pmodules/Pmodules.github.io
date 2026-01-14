@@ -139,30 +139,28 @@ hello_world:
 
   versions:
     1.0.0:
-      config:                          # <1>
-        compile_in_sourcetree: true
-        build_functions:
+      config:
+        compile_in_sourcetree: true    # <1>
+        build_functions:               # <2>
           prep: [pbuild::prep]
+          configure: []
           compile: [pbuild::compile]
           install: [install-1]
-    2.0.0:                             # <2>
+    2.0.0:                             # <3>
       config:
         relstage: unstable
 ----
-<1> Various changes are necessary in the config section:
-* With autotools the software can be compiled outside the sources. This is recommended and the default for autotools and CMake.
-* The build function must now be defined:
-** In version 1.x the default configure step must be skipped.
-** The default installation function cannot be used for version 1.x.
-<2> Configuration for version 2.0.0.
+<1> With autotools the software can be compiled outside the sources. This is recommended and the default for autotools and CMake. Therefore this configuration has been moved from the default section to the version specific section.
+<2> Now that an Autotool configuration is available, the build functions for version 1 and version 2 differ. While for version 2 the default function can (and should) be used, a special function is required for the installation of version 1 and there is no configuration.
+<3> Configuration for version 2.0.0.
 +
-2. Edit `./build`
+1. Edit `./build`
 +
 [source,shell]
 ----
 #!/usr/bin/env modbuild
 
-pbuild::pre_configure(){
+pbuild::pre_configure(){       # <1>
         ./autogen.sh
 }
 
@@ -171,6 +169,14 @@ install-1() {
         mkdir -p "${PREFIX}/bin"
         install --mode=0755 "${SRC_DIR}/hello" "${PREFIX}/bin"
 }
+----
+<1> This function is called before `pbuild::configure()`. Since the tar file only contains a `configure.ac` and no `configure` script, the latter must be generated. In most cases, this function is not needed.
+
+1. Build version 2.0.0
++
+[source,shell]
+----
+./build 2.0.0
 ----
 
 == Deprecate old version, make current version stable
@@ -195,12 +201,22 @@ hello_world:
 
   versions:
     1.0.0:
-      config:                          # <1>
+      config:
         compile_in_sourcetree: true
-        relstage: deprecated
+        relstage: deprecated         # <1>
         build_functions:
           prep: [pbuild::prep]
+          configure: []
           compile: [pbuild::compile]
           install: [install-1]
-    2.0.0:                             # <2>
+    2.0.0:                          # <2>
+----
+<1> Set release stage of version 1.0.0 to 'deprecated'.
+<2> The config section for version 2.0.0 has been removed. Therefor the defaults are used.
+1. Change release stages
++
+[source,shell]
+----
+./build 1.0.0
+./build 2.0.0
 ----
